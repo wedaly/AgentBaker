@@ -3228,7 +3228,6 @@ cat <<EOF > /usr/local/bin/iotrace.sh
 set -xe
 
 bpftrace -o /var/log/azure/iotrace.log -e 'tracepoint:block:block_rq_issue { @biorqcount = count(); @biorqbytes = sum(args->bytes); }  tracepoint:syscalls:sys_exit_read { @reads[comm,pid] = count(); } tracepoint:syscalls:sys_exit_write { @writes[comm,pid] = count(); } interval:s:10 { time("%H:%M:%S\n"); print(@biorqcount); zero(@biorqcount); print(@biorqbytes); zero(@biorqbytes); print(@reads); clear(@reads); print(@writes); clear(@writes); }  interval:s:600 { exit(); }'
-
 EOF
 chmod +x /usr/local/bin/iotrace.sh
 
@@ -3242,9 +3241,33 @@ ExecStart=/usr/local/bin/iotrace.sh
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# Another hack to get exec calls with args during the first 30 seconds of node startup.
+cat <<EOF > /usr/local/bin/exectrace.sh
+#!/usr/bin/env bash
+
+set -xe
+
+bpftrace -o /var/log/azure/exectrace.log -e 'tracepoint:syscalls:sys_enter_exec* { join(args->argv); } interval:s:30 { exit(); }'
+EOF
+chmod +x /usr/local/bin/exectrace.sh
+
+cat <<EOF > /etc/systemd/system/exectrace.service
+[Unit]
+Description=Trace exec calls on node startup
+
+[Service]
+ExecStart=/usr/local/bin/exectrace.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 systemctl daemon-reload
 systemctl enable iotrace
 systemctl start iotrace
+systemctl enable exectrace
+systemctl start exectrace
 
 UBUNTU_RELEASE=$(lsb_release -r -s)
 if [[ ${UBUNTU_RELEASE} == "16.04" ]]; then
