@@ -7,6 +7,12 @@ if [ -f /opt/azure/containers/provision.complete ]; then
       exit 0
 fi
 
+# WIDALY: hack to get containerd images/snapshots
+ctr -n k8s.io images ls > /var/log/azure/containerd-images.txt
+ctr -n k8s.io snapshots ls > /var/log/azure/containerd-snapshots.txt
+ctr -n k8s.io images usage mcr.microsoft.com/containernetworking/azure-cns:v1.4.44.3 > /var/log/azure/containerd-azure-cns-images-usage.txt
+ctr -n k8s.io images usage mcr.microsoft.com/containernetworking/cni-dropgz:v0.0.4 > /var/log/azure/containerd-dropgz-images-usage.txt
+
 # WIDALY: hacks to run iostat from node startup.
 # Output is written to /var/log/azure/iostat.log
 cat <<EOF > /usr/local/bin/iostat.sh
