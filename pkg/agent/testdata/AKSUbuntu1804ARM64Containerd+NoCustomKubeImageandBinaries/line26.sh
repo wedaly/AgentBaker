@@ -1,3 +1,6 @@
+# WIDALY HACK: now disable iotrace
+systemctl stop iotrace
+
 CSE_STARTTIME=$(date)
 CSE_STARTTIME_FORMATTED=$(date +"%F %T.%3N")
 timeout -k5s 15m /bin/bash /opt/azure/containers/provision.sh >> /var/log/azure/cluster-provision.log 2>&1
