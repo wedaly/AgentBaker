@@ -3592,7 +3592,7 @@ else
             systemctl restart --no-block apt-daily.service
             
         fi
-        aptmarkWALinuxAgent unhold &
+        # aptmarkWALinuxAgent unhold &
     elif [[ $OS == $MARINER_OS_NAME ]]; then
         if [ "${ENABLE_UNATTENDED_UPGRADES}" == "true" ]; then
             if [ "${IS_KATA}" == "true" ]; then
