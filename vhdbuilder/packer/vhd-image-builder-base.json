@@ -140,11 +140,6 @@
     },
     {
       "type": "file",
-      "source": "parts/linux/cloud-init/artifacts/containerd-override.conf",
-      "destination": "/home/packer/containerd-override.conf"
-    },
-    {
-      "type": "file",
       "source": "parts/linux/cloud-init/artifacts/kubelet.service",
       "destination": "/home/packer/kubelet.service"
     },

@@ -945,6 +945,9 @@ func getContainerServiceFuncMap(config *datamodel.NodeBootstrappingConfiguration
 		"ShouldEnableCustomData": func() bool {
 			return !config.DisableCustomData
 		},
+		"GetPrivateEgressProxyAddress": func() string {
+			return config.ContainerService.Properties.SecurityProfile.GetProxyAddress()
+		},
 	}
 }
 
@@ -1219,8 +1222,6 @@ root = "{{GetDataDir}}"{{- end}}
   {{- end}}
   [plugins."io.containerd.grpc.v1.cri".registry.headers]
     X-Meta-Source-Client = ["azure/aks"]
-[plugins."io.containerd.gc.v1.scheduler"]
-  startup_delay = "10m"
 [metrics]
   address = "0.0.0.0:10257"
 {{- if TeleportEnabled }}
@@ -1296,8 +1297,6 @@ root = "{{GetDataDir}}"{{- end}}
   {{- end}}
   [plugins."io.containerd.grpc.v1.cri".registry.headers]
     X-Meta-Source-Client = ["azure/aks"]
-[plugins."io.containerd.gc.v1.scheduler"]
-  startup_delay = "10m"
 [metrics]
   address = "0.0.0.0:10257"
 {{- if TeleportEnabled }}
