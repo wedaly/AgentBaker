@@ -297,8 +297,7 @@ fi
 
 # WIDALY DEBUG: caching experiment
 echo "WIDALY DEBUG: preloading cache for calico binaries, start $(date)"
-cat /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db | wc -l
-cat /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/metadata.db | wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "flexvol*" -type f | xargs wc -l
 find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "bandwidth" -type f | xargs wc -l
 find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "calico*" -type f | xargs wc -l
 find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "flannel" -type f | xargs wc -l
@@ -310,8 +309,7 @@ find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "tuning" 
 echo "WIDALY DEBUG: finished preloading cache for calico binaries, end $(date)"
 
 echo "WIDALY DEBUG: preloading cache for calico binaries, start $(date) take two"
-cat /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db | wc -l
-cat /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/metadata.db | wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "flexvol*" -type f | xargs wc -l
 find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "bandwidth" -type f | xargs wc -l
 find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "calico*" -type f | xargs wc -l
 find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "flannel" -type f | xargs wc -l
