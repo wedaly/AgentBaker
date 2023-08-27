@@ -3511,6 +3511,29 @@ if [ "${NEEDS_CONTAINERD}" == "true" ] &&  [ "${SHOULD_CONFIG_CONTAINERD_ULIMITS
   logs_to_events "AKS.CSE.setContainerdUlimits" configureContainerdUlimits
 fi
 
+# WIDALY DEBUG: caching experiment
+echo "WIDALY DEBUG: preloading cache for calico binaries, start $(date)"
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "bandwidth" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "calico*" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "flannel" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "host-local" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "install" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "loopback" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "portmap" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "tuning" -type f | xargs wc -l
+echo "WIDALY DEBUG: finished preloading cache for calico binaries, end $(date)"
+
+echo "WIDALY DEBUG: preloading cache for calico binaries, start $(date) take two"
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "bandwidth" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "calico*" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "flannel" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "host-local" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "install" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "loopback" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "portmap" -type f | xargs wc -l
+find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ -name "tuning" -type f | xargs wc -l
+echo "WIDALY DEBUG: finished preloading cache for calico binaries, end $(date) take two"
+
 logs_to_events "AKS.CSE.ensureKubelet" ensureKubelet
 if [ "${ENSURE_NO_DUPE_PROMISCUOUS_BRIDGE}" == "true" ]; then
     logs_to_events "AKS.CSE.ensureNoDupOnPromiscuBridge" ensureNoDupOnPromiscuBridge
