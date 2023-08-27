@@ -7,39 +7,6 @@ if [ -f /opt/azure/containers/provision.complete ]; then
       exit 0
 fi
 
-# WIDALY: hack to get containerd images/snapshots
-ctr -n k8s.io images ls > /var/log/azure/containerd-images.txt
-ctr -n k8s.io snapshots ls > /var/log/azure/containerd-snapshots.txt
-ctr -n k8s.io images usage mcr.microsoft.com/containernetworking/azure-cns:v1.4.44.3 > /var/log/azure/containerd-azure-cns-images-usage.txt
-ctr -n k8s.io images usage mcr.microsoft.com/containernetworking/cni-dropgz:v0.0.4 > /var/log/azure/containerd-dropgz-images-usage.txt
-
-# WIDALY: hacks to run iostat from node startup.
-# Output is written to /var/log/azure/iostat.log
-cat <<EOF > /usr/local/bin/iostat.sh
-#!/usr/bin/env bash
-
-set -xe
-
-iostat -ty 1 >> /var/log/azure/iostat.log
-
-EOF
-
-chmod +x /usr/local/bin/iostat.sh
-
-cat <<EOF > /etc/systemd/system/iostat.service
-[Unit]
-Description=Report IO on node startup
-
-[Service]
-ExecStart=/usr/local/bin/iostat.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload
-systemctl enable iostat
-systemctl start iostat
-
 aptmarkWALinuxAgent hold &
 
 # Setup logs for upload to host
@@ -89,6 +56,10 @@ if [[ "${DISABLE_SSH}" == "true" ]]; then
     disableSSH || exit $ERR_DISABLE_SSH
 fi
 
+# This involes using proxy, log the config before fetching packages
+echo "private egress proxy address is '${PRIVATE_EGRESS_PROXY_ADDRESS}'"
+# TODO update to use proxy
+
 if [[ "${SHOULD_CONFIGURE_HTTP_PROXY}" == "true" ]]; then
     if [[ "${SHOULD_CONFIGURE_HTTP_PROXY_CA}" == "true" ]]; then
         configureHTTPProxyCA || exit $ERR_UPDATE_CA_CERTS
@@ -98,7 +69,7 @@ fi
 
 
 if [[ "${SHOULD_CONFIGURE_CUSTOM_CA_TRUST}" == "true" ]]; then
-    configureCustomCaCertificate || $ERR_UPDATE_CA_CERTS
+    configureCustomCaCertificate || exit $ERR_UPDATE_CA_CERTS
 fi
 
 if [[ -n "${OUTBOUND_COMMAND}" ]]; then
