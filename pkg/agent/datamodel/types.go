@@ -784,6 +784,13 @@ func (a *AgentPoolProfile) GetCustomLinuxOSConfig() *CustomLinuxOSConfig {
 	return a.CustomLinuxOSConfig
 }
 
+func (a *AgentPoolProfile) GetAgentPoolWindowsProfile() *AgentPoolWindowsProfile {
+	if a == nil {
+		return nil
+	}
+	return a.AgentPoolWindowsProfile
+}
+
 // Properties represents the AKS cluster definition.
 type Properties struct {
 	ClusterID               string
@@ -2167,6 +2174,10 @@ func (err *CSEStatusParsingError) Error() string {
 
 type AgentPoolWindowsProfile struct {
 	DisableOutboundNat *bool `json:"disableOutboundNat,omitempty"`
+
+	// Windows next-gen networking uses Windows eBPF for the networking dataplane.
+	EnableNextGenNetworking    bool   `json:"enableNextGenNetworking,omitempty"`
+	NextGenNetworkingUrlBase   string `json:"nextGenNetworkingUrlBase,omitempty"`
 }
 
 // IsDisableWindowsOutboundNat returns true if the Windows agent pool disable OutboundNAT.
@@ -2174,6 +2185,20 @@ func (a *AgentPoolProfile) IsDisableWindowsOutboundNat() bool {
 	return a.AgentPoolWindowsProfile != nil &&
 		a.AgentPoolWindowsProfile.DisableOutboundNat != nil &&
 		*a.AgentPoolWindowsProfile.DisableOutboundNat
+}
+
+func (a *AgentPoolWindowsProfile) GetEnableNextGenNetworking() bool {
+	if a == nil {
+		return false
+	}
+	return a.EnableNextGenNetworking
+}
+
+func (a *AgentPoolWindowsProfile) GetNextGenNetworkingUrlBase() string {
+	if a == nil {
+		return ""
+	}
+	return a.NextGenNetworkingUrlBase
 }
 
 // SecurityProfile begin.
