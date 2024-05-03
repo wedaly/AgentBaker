@@ -2167,6 +2167,11 @@ func (err *CSEStatusParsingError) Error() string {
 
 type AgentPoolWindowsProfile struct {
 	DisableOutboundNat *bool `json:"disableOutboundNat,omitempty"`
+
+	// Windows Next Gen Networking uses Windows eBPF for the networking dataplane.
+	EnableNextGenNetworking    bool   `json:"enableNextGenNetworking,omitempty"`
+	WindowsEbpfUrlBase         string `json:"windowsEbpfUrlBase,omitempty"`
+	WindowsEbpfVersionOverride string `json:"windowsEbpfVersionOverride,omitempty"`
 }
 
 // IsDisableWindowsOutboundNat returns true if the Windows agent pool disable OutboundNAT.
