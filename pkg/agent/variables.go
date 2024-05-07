@@ -109,6 +109,8 @@ func getWindowsCustomDataVariables(config *datamodel.NodeBootstrappingConfigurat
 		"windowsSecureTlsEnabled":              cs.Properties.WindowsProfile.IsWindowsSecureTlsEnabled(),
 		"windowsGmsaPackageUrl":                cs.Properties.WindowsProfile.WindowsGmsaPackageUrl,
 		"windowsGpuDriverURL":                  cs.Properties.WindowsProfile.GpuDriverURL,
+		"windowsEnableNextGenNetworking":       strconv.FormatBool(config.AgentPoolProfile.GetAgentPoolWindowsProfile().GetEnableNextGenNetworking()),
+		"windowsNextGenNetworkingUrlBase":      config.AgentPoolProfile.GetAgentPoolWindowsProfile().GetNextGenNetworkingUrlBase(),
 		"windowsCSEScriptsPackageURL":          cs.Properties.WindowsProfile.CseScriptsPackageURL,
 		"isDisableWindowsOutboundNat":          strconv.FormatBool(config.AgentPoolProfile.IsDisableWindowsOutboundNat()),
 		"isSkipCleanupNetwork":                 strconv.FormatBool(config.AgentPoolProfile.IsSkipCleanupNetwork()),
