@@ -272,7 +272,11 @@ try
     . c:\AzureData\windows\kubeletfunc.ps1
     . c:\AzureData\windows\kubernetesfunc.ps1
     . c:\AzureData\windows\nvidiagpudriverfunc.ps1
-    . c:\AzureData\windows\nextgennetworking.ps1
+
+    $windowsNextGenNetworkingScriptPath = "c:\AzureData\windows\nextgennetworking.ps1"
+    if (Test-Path -Path $windowsNextGenNetworkingScriptPath) {
+        . $windowsNextGenNetworkingScriptPath
+    }
 
     # Install OpenSSH if SSH enabled
     $sshEnabled = [System.Convert]::ToBoolean("{{ WindowsSSHEnabled }}")
@@ -457,7 +461,9 @@ try
 
     Start-InstallGPUDriver -EnableInstall $global:ConfigGPUDriverIfNeeded -GpuDriverURL $global:GpuDriverURL
 
-    Start-InstallWindowsNextGenNetworkingIfNeeded -EnableInstall $global:EnableNextGenNetworking -URLBase $global:NextGenNetworkingURLBase
+    if (Get-Command -Name "Start-InstallWindowsNextGenNetworkingIfNeeded" -ErrorAction SilentlyContinue) {
+        Start-InstallWindowsNextGenNetworkingIfNeeded -EnableInstall $global:EnableNextGenNetworking -URLBase $global:NextGenNetworkingURLBase
+    }
 
     if (Test-Path $CacheDir)
     {
